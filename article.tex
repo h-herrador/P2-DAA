@@ -1,0 +1,291 @@
+\documentclass[a4paper, titlepage]{article}
+% Esto es para que el LaTeX sepa que el texto está en español:
+\usepackage[spanish]{babel}
+\selectlanguage{spanish}
+
+\usepackage{sectsty}
+%\allsectionsfont{\color{blue}\itshape\underline}
+\sectionfont{\color{rosaudc}}
+\subsectionfont{\color{rosaudc}}
+\subsubsectionfont{\color{rosaudc}}
+\usepackage{xcolor}
+\definecolor{rosaudc}{RGB}{226,4,123}
+
+% Esto es para poder escribir acentos directamente:
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{titling}
+\usepackage{float}
+
+
+%% Asigna un tamaño a la hoja y los márgenes
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Paquetes de la AMS
+\usepackage{amsmath, amsthm, amsfonts}
+%% Para añadir archivos con extensión pdf, jpg, png or tif
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+%% Primero escribimos el título
+\title{Práctica 1: Búsqueda de pares con suma objetivo. Implementación con listas y conjuntos}
+\author{Hugo Herrador Segade \& Lucía Hevia González \& María Quintáns Costa\\
+  \small Diseño y Análisis de Algoritmos\\
+  \small Universidade da Coruña
+}
+
+%% Después del "preámbulo", podemos empezar el documento
+
+\begin{document}
+\begin{titlepage}
+
+\centering
+\begin{figure}
+\centering
+\includegraphics[scale = 0.2]{logos.png}
+\end{figure}
+
+\normalsize {}
+\hspace{50mm}
+
+\vspace{5cm}
+
+\Huge
+\textbf{Práctica 1: Búsqueda de pares con suma objetivo. Implementación con listas y conjuntos} 
+\vfill
+{\Large Autores \par}
+
+\huge {Herrador Segade, Hugo}
+
+\huge{Hevia González, Lucía}
+
+\huge{Quintáns Costa, María}
+
+\vfill
+\vfill
+\vfill
+\vfill
+\large {Diseño y Análisis de Algoritmos} \\
+\large {Grado en Ciencia e Ingeniería de Datos} \\
+\large {Universidade da Coruña}
+\vfill
+{\large Curso 2024-2025}
+
+\clearpage 
+\vfill
+\end{titlepage}
+
+
+\begin{abstract}
+
+En este trabajo, desarrollamos dos algoritmos para, dados un array sin repetidos de enteros ordenados y no necesariamente consecutivos y una suma objetivo, encontrar todas las parejas de números que sumen la suma objetivo. Desarrollamos un algoritmo basado en listas, de complejidad $O(n^2)$; y uno basado en conjuntos, de complejidad $O(n)$.
+
+Realizamos un análisis de la complejidad de los algoritmos, concluyendo las complejidades mencionadas en el párrafo anterior. Para ello, efectuamos un estudio teórico detallado de los algoritmos y un análisis empírico, teniendo en cuenta un umbral de precisión, y poniendo a prueba a los algoritmos en casos límite.
+
+Una vez realizado el análisis, concluimos que es preferible la solución basada en conjuntos porque presenta una complejidad asintótica lineal; frente a la basada en listas, que es de complejidad cuadrática.
+
+\vfill \end{abstract}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section*{Preámbulo}
+
+El presente documento, elaborado íntegramente por (en orden alfabético) Hugo Herrador Segade, Lucía Hevia González y María Quintáns Costa pretende servir como memoria la primera práctica de la asignatura Diseño y Análisis de Algoritmos (GCED-614G02011) del Grado en Ciencia e Ingeniería de Datos de la Universidad de A Coruña en el marco del curso académico 2024-25.
+
+\section{Introducción}
+
+En este proyecto, se pretende elaborar dos algoritmos diferentes para, dados una lista ordenada y sin repetidos de números enteros, y un entero (que llamaremos suma objetivo), localizar las parejas de números del array que suman la suma objetivo. Después procederemos al análisis de la complejidad de dichos algoritmos.
+
+Veamos un ejemplo en el que se presenta el comportamiento del algoritmo. Considerando un array  \texttt{A[6] := [1, 2, 3, 4, 5, 6]} y una suma objetivo \texttt{int S := 15} los pares de A que suman S son [(1, 6), (2, 5), (3, 4)] .
+
+La primera solución que elaboramos para resolver el problema, emplea principalmente listas de Python. Está implementado siguiendo el pseudocódigo que se muestra a continuación:
+
+\begin{figure}[h]
+
+
+\includegraphics[scale = 0.5]{pseudo_lists}
+
+\caption{Pseudocódigo de la función \
+{SearchPairsWithLists}}
+
+
+\end{figure}
+
+Veamos el flujo de ejecución de la función: Primero, se crea una lista vacía, en la que se añadirán los pares conforme sean encontrados. Luego, se itera sobre el array de números para encontrar las parejas que suman el objetivo deseado. Para cada pareja, se verifica que no haya sido contabilizada anteriormente recorriendo la lista de pares.
+
+
+El segundo enfoque emplea conjuntos, una estructura de datos que, al no contener repetidos, podría permitir mejorar la eficiencia. Hemos desarrollado nuestro código siguiendo el pseudocódigo a continuación:
+
+\begin{figure}[h]
+
+
+\includegraphics[scale = 0.5]{pseudo_sets}
+
+\caption{Pseudocódigo de la función \texttt{SearchPairsWithSets}}
+
+\end{figure}
+
+La lógica de esta implementación es distinta a la anterior. Se crea un \texttt{set} llamado \texttt{pairs} para almacenar las parejas que encontremos y otro llamado \texttt{seen} para registrar los números que ya se han leído. Luego, se itera sobre el array de entrada. Se define una variable \texttt{c} que representa la diferencia entre el objetivo y el número actual de la lista. Si \texttt{c} está en \texttt{seen}, se añade el par en el formato (menor, mayor) al conjunto \texttt{pairs}. Por último, se añade \texttt{c} a \texttt{seen}
+
+
+\section{Especificaciones técnicas}
+
+En esta sección se pretende describir el entorno de ejecución del programa, con el fin de cumplir con los objetivos de reproducibilidad y replicabilidad.
+
+\begin{table}
+\centering
+\begin{tabular}{|l|l|}
+\hline
+Procesador &  12th Intel Core i5-1235U\\  \hline
+Memoria RAM &  8 GiB\\  \hline
+Sistema Operativo& Linux Mint 22 (Wilma) \\ \hline
+Lenguaje de programación & Python 3.12.3\\ \hline
+Librerías utilizadas & ver \texttt{requirements.txt}\\ \hline 
+Unidad de medición de tiempo & Nanosegundos (ns)\\ \hline
+Entorno de ejecución & Local \\\hline
+\end{tabular}
+\caption{Características del entorno de ejecución}
+\label{maquina}
+\end{table}
+
+\section{Implementación}
+
+Dado el pseudocódigo de los algoritmos, se pretende trasladarlo a un lenguaje de alto nivel (en este caso Python 3.12). En esta sección se explicarán las decisiones tomadas y se detallarán las dificultades encontradas y las soluciones adoptadas para cada una de las dos funciones.
+
+\subsection{Implementación utilizando listas}
+
+Trasladar este pseudocódigo a Python fue una tarea bastante sencilla. Utilizamos bucles for anidados, con contadores \texttt{i, j} que creamos con la función \texttt{range()}, para comprobar para cada entero del array si existe otro entero distinto después de éste con el que sume la suma objetivo. En caso de que encuentre parejas las añade a una lista llamada  \texttt{pairs}. Devuelve esta lista.
+
+Este algoritmo emplea listas, que es una estructura de datos de Python muy versátil. Las operaciones que realizamos son:
+
+\begin{itemize}
+
+\item{Añadir elementos por el final: Para esto utilizamos el método \texttt{.append()}, que se ejecuta en tiempo constante O(1).}
+\item{Acceder a elementos por su índice: Esta operación también se ejecuta en tiempo constante.}
+
+\end{itemize}
+
+Además, las listas en Python son fácilmente iterables con un bucle \texttt{for} y permiten una implementación muy sencilla e intuitiva del algoritmo, por lo que es una solución adecuada para este problema.
+
+\begin{figure}[h]
+
+
+\includegraphics[scale = 0.3]{codigo_listas.jpeg}
+
+\caption{Pseudocódigo e implementación en Python de la función \texttt{SearchPairsWithLists}}
+\label{codigolistas}
+
+
+
+\end{figure}
+
+\subsection{Implementación utilizando conjuntos (sets)}
+
+En el caso de la implementación usando \texttt{sets}, se crea un \texttt{set} llamado \texttt{pairs} para almacenar las parejas que encontremos y otro llamado \texttt{seen} para registrar los números que ya se han leído. Luego, se itera sobre el array de entrada. Se define una variable \texttt{c} que representa la diferencia entre el objetivo y el número actual de la lista. Si \texttt{c} está en \texttt{seen}, se añade el par en el formato (menor, mayor) al conjunto \texttt{pairs}. Por último, se añade \texttt{c} a \texttt{seen}.
+
+Este algoritmo emplea \texttt{sets}, que nos permiten realizar las operaciones que nos interesan de forma muy eficiente:
+
+\begin{itemize}
+
+\item{Añadir: Se ejecuta en tiempo constante con el método \texttt{.add()}}
+
+\item{Comprobar si un elemento pertenece al conjunto: También tiene complejidad $O(1)$ usando la función \texttt{in}}
+
+\end{itemize}
+
+
+\begin{figure}[h]
+
+
+\includegraphics[scale = 0.3]{codigo_sets.jpeg}
+
+\caption{Pseudocódigo e implementación en Python de la función \texttt{SearchPairsWithSets}}
+\label{codigosets}
+
+
+\end{figure}
+
+
+\section{Pruebas}
+En esta sección, se describirán los casos de prueba utilizados para verificar el funcionamiento del algoritmo en diversas situaciones.
+
+Para elaborar los tests, utilizamos la librería de Python \texttt{unittest}, y nos aseguramos de escoger los casos de prueba concienzudamente para cubrir todas las posibles situaciones, desde las más sencillas hasta las más complejas. En el cuadro \ref{pruebas} se muestra la entrada (array y suma objetivo) y el resultado esperado.
+
+Se utilizan casos de prueba manejables, en los que se puede comprobar que la función devuelve los pares esperados. Esto incluye tanto casos en los que devuelve un cierto número de pares, como uno en el que es imposible formar pares, otro en el que se le pasa un array de tamaño 1 (por lo que tampoco es posible encontrar ninguna pareja) y un último en el que se le pasa una lista vacía.
+
+Esto cubre todas las situaciones límite posibles (no tiene sentido simplemente aumentar el tamaño del array de entrada, porque esto hará que nos sea más difícil saber qué salida esperar y no supone ningún caso atípico para el algoritmo.)
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Entrada} & \textbf{Resultado esperado}\\  \hline \hline
+[1, 2, 3, 4, 5, 6], 7 &  (1, 6), (2, 5), (3, 4)\\  \hline
+[1, 2, 3, \dots, 10], 7 &  (5, 10), (6, 9), (7, 8)\\   \hline
+[1, 3, 5], 20 & \O \\   \hline
+[1], 1 & \O \\   \hline
+[], 3 & \O \\   \hline
+\end{tabular}
+\caption{Casos de prueba utilizados en los tests.}
+\label{pruebas}
+\end{table}
+
+\section{Análisis de resultados}
+
+En esta sección realizaremos una valoración teórica y empírica de la complejidad de los dos algoritmos desarrollados.
+
+Creamos una función \texttt{generate\_input()} para generar pseudo-aleatoriamente el array de entrada y la suma objetivo, dado un tamaño de entrada. Como ninguno de los algoritmos modifica la entrada; si alguno de los tiempos de ejecución queda por debajo de un umbral de 500 microsegundos (a partir del cual consideramos la medición imprecisa), no generamos más veces el input (eso sólo causaría ``ruido'' que empeoraría las mediciones) sino que ejecutamos el programa 100 veces y promediamos los tiempos.
+
+\begin{figure}[h]
+
+\includegraphics[scale = 0.3]{codigoinput.png}
+\caption{Código desarrollado para generar la entrada}
+
+\end{figure}
+
+
+
+Decidimos que los tamaños del array de entrada deben seguir una progresión geométrica de razón 2, para facilitar poder observar comportamientos anómalos cuando el tamaño de entrada crece.
+
+Sin embargo, por la propia naturaleza de los algoritmos y con el fin de realizar un análisis preciso, llegamos a la conclusión de que los tamaños de entrada no  deben ser iguales para analizar las dos funciones. Esto es así porque al ser la función \texttt{SearchPairsWithLists} de una complejidad asintótica mayor, los tiempos de ejecución para tamaños de entrada mayores a 3200 son demasiado grandes como para ser medidos de forma práctica en la máquina que se detalla en el cuadro \ref{maquina}.
+
+En la figura \ref{cotas} se pueden ver los resultados (tiempo de ejecución; tamaño de entrada; cota subestimada, ajustada y sobreestimada; y si necesita hacer la media por ser un tiempo por debajo del umbral) obtenidos al ejecutar los dos algoritmos con los tamaños de entrada considerados.
+
+\begin{figure}[H]
+
+
+\includegraphics[scale = 0.35]{tiempos.png}
+
+
+\caption{Tiempos  de ejecución y cotas para las dos funciones}
+\label{cotas}
+
+\end{figure}
+
+En la primera tabla de la figura \ref{cotas} vemos los datos de la función \texttt{SearchPairsWithLists}. Se puede observar que $O(n)$ es una \emph{cota subestimada}; pues a medida que el tamaño de entrada crece, $T(n)/n$ aumenta más y más (tiende a infinito). En el caso de $O(n^2)$ podemos ver que obtenemos una constante $c \approx 10.8$, por lo que es la \emph{cota ajustada}. Si tomamos $O(n^{2.2})$ vemos que $T(n)/O(n^{2.2})$ tiende a  0, por lo que es una \emph{cota subestimada}.
+
+Si nos paramos a analizar el código (véase figura \ref{codigolistas}) observamos que hay dos bucles \texttt{for} anidados. El exterior se ejecuta tantas veces como el tamaño de la entrada y el interior en promedio la mitad. Como el resto de operaciones se ejecutan en tiempo constante, concluímos que la complejidad del algoritmo es $O(n^2)$, coherentemente con los resultados obtenidos empíricamente.
+
+En la segunda tabla tenemos información similar para la función \texttt{SearchPairsWithSets}. En este caso vemos que $O(log(n))$ y $O(n^{1.5})$ son la cota 	\emph{subestimada} y \emph{sobreestimada}, respectivamente. En el caso de la cota ajustada no parece que esté, en principio, tan claro. A simple vista puede parecer que la cota $O(n)$ es una cota subestimada. Sin embargo, lo que está sucediendo es que al estar trabajando el algoritmo con arrays muy grandes, la memoria caché no es suficiente para guardarlos, por lo que tiene que hacer lecturas de memoria principal, que ralentizan mucho la ejecución y llevan a unas últimas mediciones anómalas. SI ejecutásemos el mismo programa en una máquina con mejores características obtendríamos unos resultados más claros. No cabe duda, igualmente, de que la cota ajustada es $O(n)$ con una constante $c \approx 97.3$
+
+Si nos fijamos en el código (figura \ref{codigosets}), tenemos un bucle \texttt{for} que se ejecuta tantas veces como tamaño de la entrada y en cuyo interior todas las operaciones se ejecutan en tiempo constante. Por lo tanto, la complejidad del algoritmo es $O(n)$, como ya habíamos previsto.
+
+\section{Conclusiones}
+
+En este trabajo, desarrollamos dos algoritmos para, dados un array sin repetidos de enteros ordenados y no necesariamente consecutivos y una suma objetivo, encontrar todas las parejas de números que sumen la suma objetivo. Desarrollamos un algoritmo basado en listas, de complejidad $O(n^2)$; y uno basado en conjuntos, de complejidad $O(n)$.
+
+Realizamos un análisis teórico y empírico de la complejidad de los algoritmos, concluyendo las complejidades mencionadas en el párrafo anterior.
+
+Debido a las limitaciones de la máquina, obtuvimos unos tiempos algo inconsistentes, sobre todo en la función \texttt{SearchPairsWithSets}. Además, ha podido interferir el haber tenido procesos corriendo en segundo plano. Nos habría gustado haber podido ejecutar el programa en una máquina más potente para evitar estos problemas.
+
+
+\bibliographystyle{abbrv}
+\bibliography{sample}
+
+\end{document}

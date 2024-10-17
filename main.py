@@ -1,0 +1,35 @@
+from source import *
+from times import *
+import numpy as np
+
+x = Analysis()
+
+bubble = [[(lambda x: x * np.log2(x), "O(n*log(n))"), (lambda x: x**2, "O(n**2)"), (lambda x: x**2.2, "O(n**2.2)")], # random
+          [(lambda x: x * np.log2(x), "O(n*log(n))"), (lambda x: x**2, "O(n**2)"), (lambda x: x**2.2, "O(n**2.2)")], # sorted
+          [(lambda x: x * np.log2(x), "O(n*log(n))"), (lambda x: x**2, "O(n**2)"), (lambda x: x**2.2, "O(n**2.2)")]] # inverse
+
+insertion = [[(lambda x: x * np.log2(x), "O(n*log(n))"), (lambda x: x**2, "O(n**2)"), (lambda x: x**2.2, "O(n**2.2)")], # random
+             [(lambda x: x * np.log2(x), "O(log(n))"), (lambda x: x, "O(n)"), (lambda x: x*np.log2(x), "O(n*log(n)")],  # sorted
+             [(lambda x: x * np.log2(x), "O(n*log(n))"), (lambda x: x**2, "O(n**2)"), (lambda x: x**2.2, "O(n**2.2)")]]    # inverse
+
+selection = [[(lambda x: x * np.log2(x), "O(n*log(n))"), (lambda x: x**2, "O(n**2)"), (lambda x: x**2.2, "O(n**2.2)")], # random
+             [(lambda x: x * np.log2(x), "O(n*log(n))"), (lambda x: x**2, "O(n**2)"), (lambda x: x**2.2, "O(n**2.2)")], # sorted
+             [(lambda x: x * np.log2(x), "O(n*log(n))"), (lambda x: x**2, "O(n**2)"), (lambda x: x**2.2, "O(n**2.2)")]] # inverse
+
+### COMPROBAR COTAS. HECHO
+
+### PROBLEMA 
+# ARREGLAR AVERAGED SIEMPRE RANDOM
+
+### PROBLEMA 2
+# ARREGLAR TESTS
+
+
+table = x.create_table(lengths = [500 * 2**i for i in range(5)], fun = x.sort_functions[0], array_type = "random", bounds = bubble[0])
+x.show_table(table, names = [bubble[0][i][1] for i in range(3)])
+
+table = x.create_table(lengths = [500 * 2**i for i in range(5)], fun = x.sort_functions[0], array_type = "sorted", bounds = bubble[0])
+x.show_table(table, names = [bubble[1][i][1] for i in range(3)])
+
+table = x.create_table(lengths = [500 * 2**i for i in range(5)], fun = x.sort_functions[0], array_type = "inverse", bounds = bubble[0])
+x.show_table(table, names = [bubble[2][i][1] for i in range(3)])

@@ -2,7 +2,7 @@ from source import *
 import time
 import random
 import prettytable
-import numpy
+import numpy as np
 
 def time_ns():
     return time.time() * 10**9
@@ -21,7 +21,7 @@ class Analysis:
         self.time_functions = [time_ns, perfcounter_ns ,processtime_ns]
         self.sort_functions = [insertionSort, bubbleSort, selectionSort]
 
-    def record_time(self, input, sort_fun):
+    def record_time(self, input, sort_fun, array_type):
         length = len(input)
         averaged = False
 
@@ -34,14 +34,31 @@ class Analysis:
             K = 100
             t1 = self.time_functions[0]()
             for _ in range(K):
-                random_array = [random.randint(-10, 10) for _ in range(length)]
-                sort_fun(random_array)
+                
+                if array_type == "sorted":
+                    input_array = np.linspace(-10, 10, length)
+
+                elif array_type == "inverse":
+                    input_array = np.linspace(10, -10, length)
+                
+                else:
+                    input_array = [random.randint(-10, 10) for _ in range(length)]
+
+                sort_fun(input_array)
             t2 = self.time_functions[0]()
             diff = t2 - t1
             averaged = True
             t1 = self.time_functions[0]()
+            
             for _ in range(K):
-                x = [random.randint(-10, 10) for _ in range(length)]
+                if array_type == "sorted":
+                    input_array = np.linspace(-10, 10, length)
+
+                elif array_type == "inverse":
+                    input_array = np.linspace(10, -10, length)
+                
+                else:
+                    input_array = [random.randint(-10, 10) for _ in range(length)]
             t2 = self.time_functions[0]()
             diff -= (t2 - t1)
             diff /= K
@@ -66,10 +83,10 @@ class Analysis:
     def create_row(self, length, fun, array_type, bounds):
         input = self.generate_list(length = length, type = array_type)
         
-        averaged, time = self.record_time(input, fun)
+        averaged, time = self.record_time(input, fun, array_type)
         averaged = "Yes" if averaged else "No"
         
-        lower_bound, adj_bound, upper_bound = (time/bounds[i][0](time) for i in range(3))
+        lower_bound, adj_bound, upper_bound = (time/bounds[i][0](length) for i in range(3))
 
         print([type(x) for x in [str(length), averaged, time, lower_bound, adj_bound, upper_bound]])
         return [str(length), averaged, time, lower_bound, adj_bound, upper_bound]

@@ -5,9 +5,9 @@ import random
 class TestInsertionSort(unittest.TestCase):
     def __init__(self):
         super().__init__()
-        self.algs = {"InsertionSort": insertionSort,
-                     "BubbleSort": bubbleSort,
-                     "SelectionSort": selectionSort
+        self.algs = {"InsertionSort": insertion_sort,
+                     "BubbleSort": bubble_sort,
+                     "SelectionSort": selection_sort
                      }
         
     def create_tests(self):

@@ -29,7 +29,7 @@
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 
 %% Primero escribimos el título
-\title{Práctica 1: Búsqueda de pares con suma objetivo. Implementación con listas y conjuntos}
+\title{Práctica 2: Algoritmos de ordenación}
 \author{Hugo Herrador Segade \& Lucía Hevia González \& María Quintáns Costa\\
   \small Diseño y Análisis de Algoritmos\\
   \small Universidade da Coruña
@@ -52,7 +52,7 @@
 \vspace{5cm}
 
 \Huge
-\textbf{Práctica 1: Búsqueda de pares con suma objetivo. Implementación con listas y conjuntos} 
+\textbf{Práctica 2: Algoritmos de ordenación} 
 \vfill
 {\Large Autores \par}
 
@@ -79,12 +79,11 @@
 
 \begin{abstract}
 
-En este trabajo, desarrollamos dos algoritmos para, dados un array sin repetidos de enteros ordenados y no necesariamente consecutivos y una suma objetivo, encontrar todas las parejas de números que sumen la suma objetivo. Desarrollamos un algoritmo basado en listas, de complejidad $O(n^2)$; y uno basado en conjuntos, de complejidad $O(n)$.
+En este trabajo, desarrollamos en Python tres conocidos algoritmos de ordenación: \texttt{BubbleSort}, \texttt{InsertionSort} y \texttt{SelectionSort}.
 
-Realizamos un análisis de la complejidad de los algoritmos, concluyendo las complejidades mencionadas en el párrafo anterior. Para ello, efectuamos un estudio teórico detallado de los algoritmos y un análisis empírico, teniendo en cuenta un umbral de precisión, y poniendo a prueba a los algoritmos en casos límite.
+Realizamos un análisis de la complejidad de los algoritmos, en el peor caso, caso medio y mejor caso. Para ello, efectuamos un estudio teórico detallado de los algoritmos y un análisis empírico, teniendo en cuenta un umbral de precisión, y poniendo a prueba a los algoritmos en casos límite.
 
-Una vez realizado el análisis, concluimos que es preferible la solución basada en conjuntos porque presenta una complejidad asintótica lineal; frente a la basada en listas, que es de complejidad cuadrática.
-
+Una vez realizado el análisis, efectuamos una comparación entre los tres algoritmos: evaluando en qué casos es preferible cada uno de ellos.
 \vfill \end{abstract}
 
 \newpage
@@ -95,40 +94,71 @@ Una vez realizado el análisis, concluimos que es preferible la solución basada
 
 \section*{Preámbulo}
 
-El presente documento, elaborado íntegramente por (en orden alfabético) Hugo Herrador Segade, Lucía Hevia González y María Quintáns Costa pretende servir como memoria la primera práctica de la asignatura Diseño y Análisis de Algoritmos (GCED-614G02011) del Grado en Ciencia e Ingeniería de Datos de la Universidad de A Coruña en el marco del curso académico 2024-25.
+El presente documento, elaborado íntegramente por (en orden alfabético) Hugo Herrador Segade, Lucía Hevia González y María Quintáns Costa pretende servir como memoria la segunda práctica de la asignatura Diseño y Análisis de Algoritmos (GCED-614G02011) del Grado en Ciencia e Ingeniería de Datos de la Universidad de A Coruña en el marco del curso académico 2024-25.
 
 \section{Introducción}
+En este proyecto, se pretende desarrollar en Python tres conocidos algoritmos de ordenación: \texttt{BubbleSort}, \texttt{InsertionSort} y \texttt{SelectionSort}, para después evaluar el comportamiento de cada uno de ellos realizando un \emph{análisis de tiempos.} A continuación, se muestra el pseudocódigo para cada una de las implementaciones:
 
-En este proyecto, se pretende elaborar dos algoritmos diferentes para, dados una lista ordenada y sin repetidos de números enteros, y un entero (que llamaremos suma objetivo), localizar las parejas de números del array que suman la suma objetivo. Después procederemos al análisis de la complejidad de dichos algoritmos.
+
+\begin{figure}[H]
+\begin{verbatim}
+function bubbleSort (v[1..n]):
+	for i := 2 to n:
+		for j := 1 to n-i+1:
+			if v[j+1] <v[j]:
+				swap(v[j], v[j+1]); #intercambio
+\end{verbatim}
+\label{pseudo_bubble}
+\caption{Pseudocódigo para la función \texttt{bubbleSort}}
+\end{figure}
+
+En la figura \ref{pseudo_bubble} se muestra el pseudocódigo a partir del cual implementamos el algoritmo de ordenación \textt{bubbleSort}. Esta función utiliza bucles anidados para comprobar cuándo el elemento en la posición 
+
+\begin{figure}[H]
+\begin{verbatim}
+function insertionSort (v[1..n]):
+	for i := 2 to n:
+		x := v[i];
+		j := i-1;
+	
+	while j > 0 and v[j] > x:
+		v[j+1]:= v[j];
+		j := j-1;
+
+	v[j+1] := x
+\end{verbatim}
+\label{pseudo_insertion}
+\caption{Pseudocódigo para la función \texttt{insertionSort}}
+\end{figure}
+
+\begin{figure}[H]
+\begin{verbatim}
+function selectionSort (v[1..n]):
+	for i:=1 to n-1:
+		minj:=i;
+		minx:=v[i];
+		
+		for j:=i+1 to n:
+			if v[j]<minx:
+				minj:=j;
+				minx:=v[j];
+			v[minj]:=v[i];
+			v[i]:=minx;
+\end{verbatim}
+\label{pseudo_selection}
+\caption{Pseudocódigo para la función \texttt{selectionSort}}
+\end{figure}
 
 Veamos un ejemplo en el que se presenta el comportamiento del algoritmo. Considerando un array  \texttt{A[6] := [1, 2, 3, 4, 5, 6]} y una suma objetivo \texttt{int S := 15} los pares de A que suman S son [(1, 6), (2, 5), (3, 4)] .
 
 La primera solución que elaboramos para resolver el problema, emplea principalmente listas de Python. Está implementado siguiendo el pseudocódigo que se muestra a continuación:
 
-\begin{figure}[h]
-
-
-\includegraphics[scale = 0.5]{pseudo_lists}
-
-\caption{Pseudocódigo de la función \
-{SearchPairsWithLists}}
-
-
-\end{figure}
 
 Veamos el flujo de ejecución de la función: Primero, se crea una lista vacía, en la que se añadirán los pares conforme sean encontrados. Luego, se itera sobre el array de números para encontrar las parejas que suman el objetivo deseado. Para cada pareja, se verifica que no haya sido contabilizada anteriormente recorriendo la lista de pares.
 
 
 El segundo enfoque emplea conjuntos, una estructura de datos que, al no contener repetidos, podría permitir mejorar la eficiencia. Hemos desarrollado nuestro código siguiendo el pseudocódigo a continuación:
 
-\begin{figure}[h]
-
-
-\includegraphics[scale = 0.5]{pseudo_sets}
-
-\caption{Pseudocódigo de la función \texttt{SearchPairsWithSets}}
-
-\end{figure}
 
 La lógica de esta implementación es distinta a la anterior. Se crea un \texttt{set} llamado \texttt{pairs} para almacenar las parejas que encontremos y otro llamado \texttt{seen} para registrar los números que ya se han leído. Luego, se itera sobre el array de entrada. Se define una variable \texttt{c} que representa la diferencia entre el objetivo y el número actual de la lista. Si \texttt{c} está en \texttt{seen}, se añade el par en el formato (menor, mayor) al conjunto \texttt{pairs}. Por último, se añade \texttt{c} a \texttt{seen}
 
@@ -172,17 +202,6 @@ Este algoritmo emplea listas, que es una estructura de datos de Python muy vers�
 
 Además, las listas en Python son fácilmente iterables con un bucle \texttt{for} y permiten una implementación muy sencilla e intuitiva del algoritmo, por lo que es una solución adecuada para este problema.
 
-\begin{figure}[h]
-
-
-\includegraphics[scale = 0.3]{codigo_listas.jpeg}
-
-\caption{Pseudocódigo e implementación en Python de la función \texttt{SearchPairsWithLists}}
-\label{codigolistas}
-
-
-
-\end{figure}
 
 \subsection{Implementación utilizando conjuntos (sets)}
 
@@ -199,16 +218,6 @@ Este algoritmo emplea \texttt{sets}, que nos permiten realizar las operaciones q
 \end{itemize}
 
 
-\begin{figure}[h]
-
-
-\includegraphics[scale = 0.3]{codigo_sets.jpeg}
-
-\caption{Pseudocódigo e implementación en Python de la función \texttt{SearchPairsWithSets}}
-\label{codigosets}
-
-
-\end{figure}
 
 
 \section{Pruebas}
@@ -242,12 +251,6 @@ En esta sección realizaremos una valoración teórica y empírica de la complej
 
 Creamos una función \texttt{generate\_input()} para generar pseudo-aleatoriamente el array de entrada y la suma objetivo, dado un tamaño de entrada. Como ninguno de los algoritmos modifica la entrada; si alguno de los tiempos de ejecución queda por debajo de un umbral de 500 microsegundos (a partir del cual consideramos la medición imprecisa), no generamos más veces el input (eso sólo causaría ``ruido'' que empeoraría las mediciones) sino que ejecutamos el programa 100 veces y promediamos los tiempos.
 
-\begin{figure}[h]
-
-\includegraphics[scale = 0.3]{codigoinput.png}
-\caption{Código desarrollado para generar la entrada}
-
-\end{figure}
 
 
 
@@ -257,16 +260,6 @@ Sin embargo, por la propia naturaleza de los algoritmos y con el fin de realizar
 
 En la figura \ref{cotas} se pueden ver los resultados (tiempo de ejecución; tamaño de entrada; cota subestimada, ajustada y sobreestimada; y si necesita hacer la media por ser un tiempo por debajo del umbral) obtenidos al ejecutar los dos algoritmos con los tamaños de entrada considerados.
 
-\begin{figure}[H]
-
-
-\includegraphics[scale = 0.35]{tiempos.png}
-
-
-\caption{Tiempos  de ejecución y cotas para las dos funciones}
-\label{cotas}
-
-\end{figure}
 
 En la primera tabla de la figura \ref{cotas} vemos los datos de la función \texttt{SearchPairsWithLists}. Se puede observar que $O(n)$ es una \emph{cota subestimada}; pues a medida que el tamaño de entrada crece, $T(n)/n$ aumenta más y más (tiende a infinito). En el caso de $O(n^2)$ podemos ver que obtenemos una constante $c \approx 10.8$, por lo que es la \emph{cota ajustada}. Si tomamos $O(n^{2.2})$ vemos que $T(n)/O(n^{2.2})$ tiende a  0, por lo que es una \emph{cota subestimada}.
 

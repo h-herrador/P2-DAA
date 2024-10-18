@@ -17,7 +17,16 @@ def round_with_zeros(n, p):
     return f"{n:.{p}f}"
 
 class Analysis:
+    """
+    """
     def __init__(self):
+        """
+        Initializes the `Analysis` class.
+        
+        Attributes:
+        time_functions (list): A list of time measurement functions for evaluating algorithm performance.
+        sort_functions (list): A list of sort algorithms
+        """
         self.time_functions = [time_ns, perfcounter_ns ,processtime_ns]
         self.sort_functions = [insertion_sort, bubble_sort, selection_sort]
 

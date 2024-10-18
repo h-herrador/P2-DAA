@@ -1,4 +1,18 @@
 def insertion_sort(v: list):
+    """
+    Sorts an array of elements in ascending order using the insertion sort algorithm. 
+
+    Parameters
+    ----------
+    v : list
+        List of comparable elements to be sorted.
+
+    Returns
+    -------
+    v : list
+        The input list sorted in ascending order:
+
+    """
     for i in range(1, len(v)):
         x = v[i]
         j = i-1
@@ -9,6 +23,20 @@ def insertion_sort(v: list):
     return v
 
 def bubble_sort(v: list):
+    """
+    Sorts an array of elements in ascending order using the bubble sort algorithm. 
+
+    Parameters
+    ----------
+    v : list
+        List of comparable elements to be sorted.
+
+    Returns
+    -------
+    v : list
+        The input list sorted in ascending order
+
+    """
     n = len(v)
     for i in range(n):
         for j in range(n-i-1):
@@ -17,6 +45,20 @@ def bubble_sort(v: list):
     return v
 
 def selection_sort(v: list):
+    """
+    Sorts an array of elements in ascending order using the selection sort algorithm.     
+
+    Parameters
+    ----------
+    v : list
+        List of comparable elements to be sorted.
+
+    Returns
+    -------
+    v : list
+        The input list sorted in ascending order.
+
+    """
     n = len(v)
     for i in range(n):
         minj = i

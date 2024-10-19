@@ -31,7 +31,6 @@ class Analysis:
 
         # support for times under the threshold
         if (diff := t2 - t1) < 500000:
-            print(diff)
             K = 1000
             t1 = self.time_functions[0]()
             for _ in range(K):
@@ -48,7 +47,6 @@ class Analysis:
             t2 = self.time_functions[0]()
             diff -= (t2 - t1)
             diff /= K
-            print(diff)
 
         return (averaged, diff)
 
@@ -56,13 +54,13 @@ class Analysis:
 
     def generate_input(self, length, type):
         if type == "random":
-            input = [random.randrange(-10, 10) for _ in range(length)]
+            input = np.array([random.randrange(-10, 10) for _ in range(length)])
         
         elif type == "sorted":
-            input = np.arange(-10, 10, 20/length)
+            input = np.arange(0, length, dtype = int)
         
         else:
-            input = np.arange(10, -10, -20/length)
+            input = np.arange(length, 0, -1, dtype = int)
         
         return input
 
